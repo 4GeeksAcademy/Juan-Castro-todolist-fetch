@@ -10,9 +10,11 @@ import '../styles/index.css'
 
 // components
 import Home from './components/Home';
+import ToDoListConFetch from './components/ToDoListConFetch';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Home/>
+    {/* <Home/> */}
+    <ToDoListConFetch/>
   </React.StrictMode>,
 )
