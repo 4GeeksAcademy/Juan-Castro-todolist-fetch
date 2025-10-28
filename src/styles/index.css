@@ -1,11 +1,106 @@
-/* 
 
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
+:root {
 
-*/
+    --text-color: gray;
+    --bg-color: #ffffff;
+    
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.todo-listas {
+    min-height: 100%;
+    background-color: var(--bg-color);
+    padding: calc(var(--gutter) * 2);
+    display: flex;
+    justify-content: center; 
+}
+.todo-title {
+    text-align: center;
+    color: var(--text-color);
+    font-size: clamp(1.5rem, 6vw, 3.5rem); 
+    font-weight: 300;
+    margin: 0.5rem 0;
+}
+
+ul li {
+    list-style-type: none;
+    color: var(--text-color); 
+    text-align: left;
+    margin-top: 0.75rem;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+.todo-input {
+    display: auto;
+    margin: 0.5rem auto;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    width: 100vh;
+    max-width: 100%;
+    font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+    color: var(--text-color);
+    box-sizing: border-box;
+}
+
+.todo-input:focus,
+.todo-input:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(226,232,240,0.35);
+    border-color: #e2e8f0;
+    color: var(--text-color);
+}
+
+.Hoja {
+    width: 100%;
+    max-width: var(--max-width); 
+    display: block;
+    background-color: var(--bg-color);
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
+}
+
+.delete-btn {
+    margin-left: 1rem;
+    background-color: transparent;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.delete-btn:hover {
+    background: rgba(229,62,62,0.08);
+}
+
+.Hoja ul {
+    padding: 0;
+    margin: 0;
+}
+
+.Hoja ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    padding: 0.25rem 0;
+}
+
+.Hoja ul li .delete-btn {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(6px);
+    transition: opacity 150ms ease, transform 150ms ease, visibility 150ms;
+}
+
+.Hoja ul li:hover .delete-btn {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
