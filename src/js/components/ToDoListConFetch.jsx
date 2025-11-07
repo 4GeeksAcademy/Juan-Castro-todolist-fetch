@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 const username = 'juan-cas';
 const urlBase = `https://playground.4geeks.com/todo/users/${username}`;
+const todosBase = `https://playground.4geeks.com/todo/todos`;
 
 const ToDoListConFetch = () => {
 
@@ -19,9 +20,7 @@ const ToDoListConFetch = () => {
                 const data = await response.json();
                 console.log('tareas desde API:', data.todos);
 
-                const initial = Array.isArray(data.todos)
-                    ? data.todos.map(t => (typeof t === 'string' ? t : t.label ?? ''))
-                    : [];
+                const initial = Array.isArray(data.todos) ? data.todos : [];
                 setTodos(initial);
             } else {
                 console.log('No se encontraron tareas');
@@ -31,39 +30,49 @@ const ToDoListConFetch = () => {
         }
     };
 
-    const handleKeyDown = async (e) => {
-        if (e.key === 'Enter') {
-            console.log('ingrese a handlerKeyDown');
 
-            const textoLimpio = nuevaTarea.trim();
-            if (textoLimpio) {
-                try {
-                    const response = await fetch(`https://playground.4geeks.com/todo/todos/${username}`, {
-                        method: 'POST',
-                        headers: { 'content-type': 'application/json' },
-                        body: JSON.stringify({
-                            label: textoLimpio,
-                            is_done: false
-                        })
-                    });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const textoLimpio = text.trim();
+        if (!textoLimpio) return;
 
-                    if (response.ok) {
-                        console.log('Tarea agregada correctamente');
+        try {
+            const response = await fetch(`https://playground.4geeks.com/todo/todos/${username}`, {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                    label: textoLimpio,
+                    is_done: false
+                })
+            });
 
-                        setNuevaTarea('');
-                        getTasks();
-                    } else {
-                        console.log('No se pudo agregar la tarea');
-                    }
-                } catch (error) {
-                    console.error('Error agregando tarea', error);
-                }
+            if (response.ok) {
+                console.log('Tarea agregada correctamente');
+                setText('');
+                await getTasks();
+            } else {
+                console.log('No se pudo agregar la tarea');
             }
+        } catch (error) {
+            console.error('Error agregando tarea', error);
         }
     };
 
-    const removeTodo = (index) => {
-        setTodos(prev => prev.filter((_, i) => i !== index));
+    const handleDeleteTodo = async (index) => {
+        try {
+            // Asumimos que la API expone DELETE en /todo/todos/:username/:index
+            const response = await fetch(`${todosBase}/${index}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                await getTasks();
+            } else {
+                console.log('No se pudo eliminar la tarea');
+            }
+        } catch (error) {
+            console.error('Error eliminando tarea', error);
+        }
     };
 
     return (
@@ -72,7 +81,7 @@ const ToDoListConFetch = () => {
                 <h1 className="todo-title text-center mt-4">To-dos</h1>
 
                 <div className="Hoja">
-                    <form onSubmit={handleKeyDown}>
+                    <form onSubmit={handleSubmit}>
                         <input
                             className="todo-input"
                             type="text"
@@ -84,12 +93,12 @@ const ToDoListConFetch = () => {
                     <ul>
                         {todos.map((t, i) => (
                             <li key={i}>
-                                <span>{t}</span>
+                                <span>{typeof t === 'string' ? t : t.label}</span>
                                 <button
                                     type="button"
                                     className="delete-btn"
-                                    onClick={() => removeTodo(i)}
-                                    aria-label={`Eliminar ${t}`}
+                                    onClick={() => handleDeleteTodo(i)}
+                                    aria-label={`Eliminar ${typeof t === 'string' ? t : t.label}`}
                                 >
                                     Eliminar
                                 </button>
