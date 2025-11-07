@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const username = 'juan-cas';
 const urlBase = `https://playground.4geeks.com/todo/users/${username}`;
-const todosBase = `https://playground.4geeks.com/todo/todos`;
+const todosBase = `https://playground.4geeks.com/todo/users/${username}/todos`;
 
 const ToDoListConFetch = () => {
 
@@ -60,8 +60,8 @@ const ToDoListConFetch = () => {
 
     const handleDeleteTodo = async (index) => {
         try {
-            // Asumimos que la API expone DELETE en /todo/todos/:username/:index
-            const response = await fetch(`${todosBase}/${index}`, {
+
+            const response = await fetch(`https://playground.4geeks.com/todo/todos/${index}`, {
                 method: 'DELETE',
             });
 
@@ -97,7 +97,7 @@ const ToDoListConFetch = () => {
                                 <button
                                     type="button"
                                     className="delete-btn"
-                                    onClick={() => handleDeleteTodo(i)}
+                                    onClick={() => handleDeleteTodo(t.id)}
                                     aria-label={`Eliminar ${typeof t === 'string' ? t : t.label}`}
                                 >
                                     Eliminar
